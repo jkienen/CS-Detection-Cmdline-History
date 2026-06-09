@@ -1,0 +1,113 @@
+# This is an exported workflow. Editing this file is not recommended.
+
+name: Send Command-line history email after detection
+trigger:
+    next:
+        - 34severity_is_greater_than_medium3434tactic_is_equal_to_falcon_overwatch34
+    event: Investigatable/EPP
+    name: Detection > EPP Detection
+    type: Signal
+    version_constraint: ~1
+actions:
+    SendEmail:
+        id: 07413ef9ba7c47bf5a242799f59902cc
+        default_name: Send email
+        name: Send email
+        properties:
+            _fields:
+                - ${Trigger.Detection.EPP.Sensor.Hostname}
+            file_attachment: ${WorkflowSpecificEventQuery.file_csv}
+            msg: Command-line history for the triggering host is attached as CSV.
+            msg_type: text
+            subject: Command-line history
+            to: []
+        version_constraint: ~1
+    WorkflowSpecificEventQuery:
+        id: cdf5c3e0d69f156eaaf56c1f5d3f1b66
+        default_name: Workflow-specific event query
+        inline_configuration:
+            input_schema:
+                $schema: https://json-schema.org/draft-07/schema
+                properties:
+                    source_id:
+                        type: string
+                        title: Source id
+                        default: '*'
+                    locale:
+                        type: string
+                        title: Locale
+                    timezone:
+                        type: string
+                        title: Timezone
+                required:
+                    - source_id
+                    - locale
+                    - timezone
+                type: object
+                description: Generated request schema
+            output_schema:
+                $schema: https://json-schema.org/draft-07/schema
+                properties:
+                    CommandLine:
+                        type: string
+                        title: CommandLine
+                    ComputerName:
+                        type: string
+                        title: ComputerName
+                    HumanTime:
+                        type: string
+                        title: HumanTime
+                    ProcessLineage:
+                        type: string
+                        title: ProcessLineage
+                    UserName:
+                        type: string
+                        title: UserName
+                type: object
+                description: Generated response schema
+            config:
+                description: ""
+                end: now
+                last_modified_by: jkienen
+                last_modified_timestamp: "2026-06-05T18:08:07.910Z"
+                repo_or_view: search-all
+                search_name: Get History Command Lines (Trigger Host Only)
+                search_query: |-
+                    ?source_id
+                    | #event_simpleName = ProcessRollup2
+                    | default(field=GrandParentBaseFileName, value="Unknown")
+                    | ProcessLineage := format(format="%s > %s > %s", field=[GrandParentBaseFileName, ParentBaseFileName, FileName])
+                    | ProcessStartTime := ProcessStartTime * 1000
+                    | HumanTime := formatTime("%Y-%m-%d %H:%M:%S", field=ProcessStartTime, locale=?locale, timezone=?timezone)
+                    | sort(ProcessStartTime, order=asc, limit=20000)
+                    | select(["HumanTime", "UserName", "ComputerName", "CommandLine", "ProcessLineage"])
+                search_query_args:
+                    source_id: '*'
+                start: 24h
+                tags: []
+        class: Inline.QueryEvent
+        name: Workflow-specific event query
+        next:
+            - SendEmail
+        properties:
+            logscale_search_end_time: now
+            logscale_search_start_time: 3 hr
+            output_files_only: false
+            source_id: ${data['Trigger.Detection.EPP.Sensor.SensorID']}
+            locale: pt_BR
+            timezone: America/Sao_Paulo
+            workflow_csv_header_fields:
+                - HumanTime
+                - UserName
+                - ComputerName
+                - CommandLine
+                - ProcessLineage
+            workflow_export_event_query_results_to_csv: true
+        version_constraint: ~1
+conditions:
+    34severity_is_greater_than_medium3434tactic_is_equal_to_falcon_overwatch34:
+        next:
+            - WorkflowSpecificEventQuery
+        expression: (Trigger.Detection.Severity:>3),(Trigger.Detection.EPP.Behavior.TacticName:'Falcon Overwatch')
+        display:
+            - '[[&#34;Severity is greater than Medium&#34;],[&#34;Tactic is equal to Falcon Overwatch&#34;]]'
