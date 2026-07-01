@@ -79,7 +79,7 @@ actions:
                     | ProcessLineage := format(format="%s > %s > %s", field=[GrandParentBaseFileName, ParentBaseFileName, FileName])
                     | ProcessStartTime := ProcessStartTime * 1000
                     | HumanTime := formatTime("%Y-%m-%d %H:%M:%S", field=ProcessStartTime, locale=?locale, timezone=?timezone)
-                    | sort(ProcessStartTime, order=asc, limit=20000)
+                    | sort(ProcessStartTime, order=desc, limit=20000)
                     | select(["HumanTime", "UserName", "ComputerName", "CommandLine", "ProcessLineage"])
                 search_query_args:
                     source_id: '*'
