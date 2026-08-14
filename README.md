@@ -13,7 +13,7 @@ When a **High/Critical severity** detection or a **Falcon OverWatch** detection 
 3. Exports the results as a **CSV file**
 4. Sends the CSV as an **email attachment** to the configured recipients
 
-This gives analysts immediate context about what was running on the host at the time of detection — without needing to manually query LogScale.
+This gives analysts immediate context about what was running on the host at the time of detection, without needing to manually query LogScale.
 
 ---
 
@@ -21,10 +21,15 @@ This gives analysts immediate context about what was running on the host at the 
 
 The workflow fires on an `Investigatable/EPP` detection signal when **at least one** of the following conditions is met:
 
-| Condition | Value |
-|---|---|
-| Severity | **High** or **Critical** (> Medium) |
-| Tactic | **Falcon OverWatch** |
+<table width="100%">
+<thead>
+<tr><th align="left">Condition<div><img width="300" height="1" alt=""></div></th><th align="left">Value<div><img width="900" height="1" alt=""></div></th></tr>
+</thead>
+<tbody>
+<tr><td>Severity</td><td><strong>High</strong> or <strong>Critical</strong> (&gt; Medium)</td></tr>
+<tr><td>Tactic</td><td><strong>Falcon OverWatch</strong></td></tr>
+</tbody>
+</table>
 
 ---
 
@@ -32,24 +37,34 @@ The workflow fires on an `Investigatable/EPP` detection signal when **at least o
 
 ![Workflow Diagram](Files/workflow-diagram.png)
 
-| Step | Type | Description |
-|---|---|---|
-| Detection > EPP Detection | Trigger | Fires on every EPP detection event |
-| Condition | Check | Severity > Medium **OR** Tactic = Falcon OverWatch |
-| Workflow-specific event query | Action | Queries last 3h of command-line history for the sensor |
-| Send email | Action | Sends the CSV attachment to configured recipients |
+<table width="100%">
+<thead>
+<tr><th align="left">Step<div><img width="375" height="1" alt=""></div></th><th align="left">Type<div><img width="165" height="1" alt=""></div></th><th align="left">Description<div><img width="660" height="1" alt=""></div></th></tr>
+</thead>
+<tbody>
+<tr><td>Detection &gt; EPP Detection</td><td>Trigger</td><td>Fires on every EPP detection event</td></tr>
+<tr><td>Condition</td><td>Check</td><td>Severity &gt; Medium <strong>OR</strong> Tactic = Falcon OverWatch</td></tr>
+<tr><td>Workflow-specific event query</td><td>Action</td><td>Queries last 3h of command-line history for the sensor</td></tr>
+<tr><td>Send email</td><td>Action</td><td>Sends the CSV attachment to configured recipients</td></tr>
+</tbody>
+</table>
 
 ---
 
 ## CSV Output Fields
 
-| Field | Description |
-|---|---|
-| `HumanTime` | Process start time (formatted, America/Sao_Paulo) |
-| `UserName` | User who executed the process |
-| `ComputerName` | Hostname |
-| `CommandLine` | Full command line |
-| `ProcessLineage` | `GrandParent > Parent > Child` chain |
+<table width="100%">
+<thead>
+<tr><th align="left">Field<div><img width="300" height="1" alt=""></div></th><th align="left">Description<div><img width="900" height="1" alt=""></div></th></tr>
+</thead>
+<tbody>
+<tr><td><code>HumanTime</code></td><td>Process start time (formatted, America/Sao_Paulo)</td></tr>
+<tr><td><code>UserName</code></td><td>User who executed the process</td></tr>
+<tr><td><code>ComputerName</code></td><td>Hostname</td></tr>
+<tr><td><code>CommandLine</code></td><td>Full command line</td></tr>
+<tr><td><code>ProcessLineage</code></td><td><code>GrandParent &gt; Parent &gt; Child</code> chain</td></tr>
+</tbody>
+</table>
 
 ---
 
@@ -96,10 +111,15 @@ logscale_search_start_time: 3 hr  # change as needed
 
 ## Files
 
-| File | Description |
-|---|---|
-| `Files/Send-cmdline-history-email-on-detection.yaml` | Workflow definition (SOAR export) |
-| `Files/workflow-diagram.png` | Workflow diagram screenshot |
+<table width="100%">
+<thead>
+<tr><th align="left">File<div><img width="570" height="1" alt=""></div></th><th align="left">Description<div><img width="630" height="1" alt=""></div></th></tr>
+</thead>
+<tbody>
+<tr><td><code>Files/Send-cmdline-history-email-on-detection.yaml</code></td><td>Workflow definition (SOAR export)</td></tr>
+<tr><td><code>Files/workflow-diagram.png</code></td><td>Workflow diagram screenshot</td></tr>
+</tbody>
+</table>
 
 ---
 
