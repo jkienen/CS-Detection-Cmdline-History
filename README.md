@@ -2,22 +2,33 @@
 
 > A CrowdStrike Falcon SOAR workflow that automatically sends the command-line execution history of a compromised host via email when a **High/Critical severity** detection or a **Falcon OverWatch** detection occurs.
 
+<p align="center">
+  <img src="Files/workflow-diagram.png" alt="Workflow diagram: an EPP detection trigger flows through a severity/tactic condition check, into a command-line history query and a send-email action." width="500">
+</p>
+
+<table width="100%">
+<thead>
+<tr><th align="left">Before<div><img width="300" height="1" alt=""></div></th><th align="left">Now<div><img width="300" height="1" alt=""></div></th><th align="left">What it buys<div><img width="400" height="1" alt=""></div></th></tr>
+</thead>
+<tbody>
+<tr><td>an analyst manually querying LogScale after every high-severity detection</td><td>an automatic email with the host's command-line history the moment a High/Critical or OverWatch detection fires</td><td>immediate investigation context, with no manual query needed</td></tr>
+</tbody>
+</table>
+
 ---
 
 ## Overview
 
-When a **High/Critical severity** detection or a **Falcon OverWatch** detection is triggered, this workflow:
+When a **High/Critical severity** detection or a **Falcon OverWatch** detection is triggered, this workflow gives analysts immediate context about what was running on the affected host at the time of detection, without needing to manually query LogScale.
 
-1. Queries the last **3 hours** of process execution history for the affected sensor
-2. Builds a full **process lineage** chain (`GrandParent > Parent > Child`)
-3. Exports the results as a **CSV file**
-4. Sends the CSV as an **email attachment** to the configured recipients
+## How It Works
 
-This gives analysts immediate context about what was running on the host at the time of detection, without needing to manually query LogScale.
+The workflow queries the last **3 hours** of process execution history for the affected sensor, builds a full **process lineage** chain (`GrandParent > Parent > Child`), exports the results as a **CSV file**, and sends it as an **email attachment** to the configured recipients.
 
 ---
 
-## Trigger Conditions
+<details>
+<summary><strong>Trigger Conditions</strong> (click to expand)</summary>
 
 The workflow fires on an `Investigatable/EPP` detection signal when **at least one** of the following conditions is met:
 
@@ -31,11 +42,10 @@ The workflow fires on an `Investigatable/EPP` detection signal when **at least o
 </tbody>
 </table>
 
----
+</details>
 
-## Workflow Steps
-
-![Workflow Diagram](Files/workflow-diagram.png)
+<details>
+<summary><strong>Workflow Steps</strong> (click to expand)</summary>
 
 <table width="100%">
 <thead>
@@ -49,9 +59,10 @@ The workflow fires on an `Investigatable/EPP` detection signal when **at least o
 </tbody>
 </table>
 
----
+</details>
 
-## CSV Output Fields
+<details>
+<summary><strong>CSV Output Fields</strong> (click to expand)</summary>
 
 <table width="100%">
 <thead>
@@ -66,9 +77,10 @@ The workflow fires on an `Investigatable/EPP` detection signal when **at least o
 </tbody>
 </table>
 
----
+</details>
 
-## Configuration
+<details>
+<summary><strong>Configuration</strong> (click to expand)</summary>
 
 Before importing this workflow, update the following:
 
@@ -90,16 +102,18 @@ The query defaults to the **last 3 hours**. To adjust, change the `logscale_sear
 logscale_search_start_time: 3 hr  # change as needed
 ```
 
----
+</details>
 
-## Requirements
+<details>
+<summary><strong>Requirements</strong> (click to expand)</summary>
 
 - CrowdStrike Falcon with **SOAR / Fusion Workflows** enabled
 - LogScale (Falcon Long Term Repository) with `ProcessRollup2` events ingested
 
----
+</details>
 
-## Import Instructions
+<details>
+<summary><strong>Import Instructions</strong> (click to expand)</summary>
 
 1. In the Falcon console, navigate to **Fusion SOAR → Workflows**
 2. Click **Import**
@@ -107,9 +121,10 @@ logscale_search_start_time: 3 hr  # change as needed
 4. Configure the email recipients
 5. Activate the workflow
 
----
+</details>
 
-## Files
+<details>
+<summary><strong>Files</strong> (click to expand)</summary>
 
 <table width="100%">
 <thead>
@@ -120,6 +135,8 @@ logscale_search_start_time: 3 hr  # change as needed
 <tr><td><code>Files/workflow-diagram.png</code></td><td>Workflow diagram screenshot</td></tr>
 </tbody>
 </table>
+
+</details>
 
 ---
 
