@@ -142,4 +142,4 @@ logscale_search_start_time: 3 hr  # change as needed
 
 ## License
 
-This workflow template is provided as-is for reference and reuse. Adapt it freely to your environment.
+This workflow template is released under the MIT License: use, adapt and redistribute it freely. Full terms in [LICENCE.md](LICENCE.md).
